@@ -10,6 +10,9 @@
 require('dotenv').load();
 
 var http = require('http');
+var https = require('https');
+var fs = require('fs');
+
 var path = require('path');
 var AccessToken = require('twilio').jwt.AccessToken;
 var VideoGrant = AccessToken.VideoGrant;
@@ -78,7 +81,16 @@ app.get('/token', function(request, response) {
 
 // Create http server and run it.
 var server = http.createServer(app);
+var privateKey  = fs.readFileSync('/home/absin/git/video-quickstart-js/server/certificates/alice.key', 'utf8');
+var certificate = fs.readFileSync('/home/absin/git/video-quickstart-js/server/certificates/alice.crt', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+var httpsServer = https.createServer(credentials, app);
+
 var port = process.env.PORT || 3000;
+var sport = 3443;
 server.listen(port, function() {
   console.log('Express server running on *:' + port);
+});
+httpsServer.listen(sport, function() {
+  console.log('Express secure server running on *:' + sport);
 });

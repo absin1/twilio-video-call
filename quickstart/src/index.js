@@ -43,6 +43,7 @@ window.addEventListener('beforeunload', leaveRoomIfJoined);
 $.getJSON('/token', function(data) {
   identity = data.identity;
   document.getElementById('room-controls').style.display = 'block';
+  document.getElementById('room-name').value = location.search.substr(1);
 
   // Bind button to join Room.
   document.getElementById('button-join').onclick = function() {
