@@ -85,7 +85,15 @@ function getTracks(participant) {
     return publication.track;
   });
 }
-
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
 // Successfully connected!
 function roomJoined(room) {
   window.room = activeRoom = room;
@@ -100,6 +108,18 @@ function roomJoined(room) {
     attachParticipantTracks(room.localParticipant, previewContainer);
   }
 
+  var add_participant_webinar_url = "http://192.168.1.7:8080/istar/rest/sales_twilio_call/"
+    +room.localParticipant+"/add_participant_webinar/"+getParameterByName('task')+"/"+
+    getParameterByName('actor');
+
+  console.log('>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<'+"Joining participant: '" + room.localParticipant + "'");
+  log('>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<'+"Joining participant: '" + room.localParticipant + "'");
+  console.log("Hitting URL: '" + add_participant_webinar_url + "'");
+  log("Hitting URL: '" + add_participant_webinar_url + "'");
+
+  var oReq = new XMLHttpRequest();
+  oReq.open("GET", add_participant_webinar_url);
+  oReq.send();
   // Attach the Tracks of the Room's Participants.
   room.participants.forEach(function(participant) {
     log("Already in Room: '" + participant.identity + "'");
